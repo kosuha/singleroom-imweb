@@ -18,21 +18,21 @@
     display: block;
 }
 
-#w202509011599600243159 ul {
+#w202509011599600243159 div.widget ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-#w202509011599600243159 ul li {
-    margin-bottom: 8px;
+#w202509011599600243159 div.widget ul li {
+  margin-bottom: 8px;
 }
 
-#w202509011599600243159 ul li.depth-01 {
-    margin-bottom: 8px;
+#w202509011599600243159 div.widget ul li:last-child {
+  margin-bottom: 0px;
 }
 
-#w202509011599600243159 ul li a {
+#w202509011599600243159 div.widget ul li a {
     display: block;
     padding: 10px 12px;
     border-radius: 6px;
@@ -44,25 +44,25 @@
     transition: all 0.3s ease;
 }
 
-#w202509011599600243159 ul li a .plain_name {
+#w202509011599600243159 div.widget ul li a .plain_name {
     display: block;
     color: inherit;
     font-size: inherit;
     font-weight: inherit;
 }
 
-#w202509011599600243159 ul li a.active,
-#w202509011599600243159 ul li a:hover {
+#w202509011599600243159 div.widget ul li a.active,
+#w202509011599600243159 div.widget ul li a:hover {
     background-color: #008f73;
     color: #ffffff;
 }
 
-#w202509011599600243159 ul li a.active .plain_name,
-#w202509011599600243159 ul li a:hover .plain_name {
+#w202509011599600243159 div.widget ul li a.active .plain_name,
+#w202509011599600243159 div.widget ul li a:hover .plain_name {
     color: #ffffff;
 }
 
-#w202509011599600243159 ul li a:active {
+#w202509011599600243159 div.widget ul li a:active {
     transform: scale(0.98);
     background-color: #007a61;
 }
