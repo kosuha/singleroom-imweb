@@ -59,8 +59,12 @@
       e.preventDefault(); // 기본 앵커 동작 방지
       
       const href = link.getAttribute('href');
-      const targetName = href.substring(1); // # 제거
+      // href에서 # 이후 부분만 추출
+      const hashIndex = href.indexOf('#');
+      const targetName = hashIndex !== -1 ? href.substring(hashIndex + 1) : href.substring(1);
       const targetId = sectionIds[targetName];
+      
+      console.log(href, targetName, targetId);
 
       // URL 업데이트 (페이지 새로고침 없이)
       history.pushState(null, null, href);
@@ -116,73 +120,71 @@
     // 위치순으로 정렬
     sectionPositions.sort((a, b) => a.top - b.top);
     
-    // 각 섹션의 영향 범위 계산 (비례적 할당)
-    const sectionRanges = [];
-    
+    // 각 섹션의 실제 범위 계산 (다음 섹션 시작점까지)
     for (let i = 0; i < sectionPositions.length; i++) {
       const currentSection = sectionPositions[i];
-      const prevSection = sectionPositions[i - 1];
       const nextSection = sectionPositions[i + 1];
       
-      let rangeStart, rangeEnd;
-      
-      if (i === 0) {
-        // 첫 번째 섹션: 시작부터 다음 섹션과의 중점까지
-        rangeStart = 0;
-        if (nextSection) {
-          const gapStart = currentSection.bottom;
-          const gapEnd = nextSection.top;
-          const gapMidPoint = gapStart + (gapEnd - gapStart) / 2;
-          rangeEnd = gapMidPoint;
-        } else {
-          // 섹션이 하나뿐인 경우
-          rangeEnd = Infinity;
-        }
-      } else if (i === sectionPositions.length - 1) {
-        // 마지막 섹션: 이전 섹션과의 중점부터 끝까지
-        const gapStart = prevSection.bottom;
-        const gapEnd = currentSection.top;
-        const gapMidPoint = gapStart + (gapEnd - gapStart) / 2;
-        rangeStart = gapMidPoint;
-        rangeEnd = Infinity;
+      if (nextSection) {
+        // 다음 섹션이 있으면 다음 섹션 시작점까지가 현재 섹션의 범위
+        currentSection.bottom = nextSection.top;
       } else {
-        // 중간 섹션: 이전 섹션과의 중점부터 다음 섹션과의 중점까지
-        const prevGapStart = prevSection.bottom;
-        const prevGapEnd = currentSection.top;
-        const prevGapMidPoint = prevGapStart + (prevGapEnd - prevGapStart) / 2;
-        
-        const nextGapStart = currentSection.bottom;
-        const nextGapEnd = nextSection.top;
-        const nextGapMidPoint = nextGapStart + (nextGapEnd - nextGapStart) / 2;
-        
-        rangeStart = prevGapMidPoint;
-        rangeEnd = nextGapMidPoint;
+        // 마지막 섹션이면 페이지 끝까지 (또는 충분히 큰 값)
+        currentSection.bottom = Math.max(
+          currentSection.bottom, 
+          document.documentElement.scrollHeight
+        );
       }
-      
-      sectionRanges.push({
-        key: currentSection.key,
-        start: rangeStart,
-        end: rangeEnd
-      });
     }
     
-    // 현재 뷰포트 위치에 해당하는 섹션 찾기
+    // 현재 뷰포트에서 50% 이상 보이는 섹션 찾기
+    const viewportHeight = window.innerHeight;
+    const viewportBottom = viewportTop + viewportHeight;
     let activeSection = null;
+    let maxVisibilityRatio = 0.5; // 최소 50% 이상이어야 함
     
-    for (const range of sectionRanges) {
-      if (viewportTop >= range.start && viewportTop < range.end) {
-        activeSection = range.key;
-        break;
+    for (const section of sectionPositions) {
+      const sectionTop = section.top;
+      const sectionBottom = section.bottom;
+      
+      // 뷰포트와 섹션의 교집합 계산
+      const intersectionTop = Math.max(viewportTop, sectionTop);
+      const intersectionBottom = Math.min(viewportBottom, sectionBottom);
+      const intersectionHeight = Math.max(0, intersectionBottom - intersectionTop);
+      
+      // 뷰포트 기준 가시성 비율 계산 (섹션이 뷰포트의 몇 %를 차지하는지)
+      const visibilityRatio = intersectionHeight / viewportHeight;
+      
+      // 뷰포트의 50% 이상을 차지하고, 가장 많이 차지하는 섹션을 활성화
+      if (visibilityRatio > maxVisibilityRatio) {
+        maxVisibilityRatio = visibilityRatio;
+        activeSection = section.key;
       }
     }
     
-    // 활성 섹션에 해당하는 링크에 active 클래스 추가
+    // 활성 섹션에 해당하는 링크에 active 클래스 추가 및 URL 업데이트
     if (activeSection) {
-      const activeLink = Array.from(submenuLinks).find(link => 
-        link.getAttribute('href') === `#${activeSection}`
-      );
+      const activeLink = Array.from(submenuLinks).find(link => {
+        const href = link.getAttribute('href');
+        // href에서 # 이후 부분만 추출해서 비교
+        const hashIndex = href.indexOf('#');
+        const targetName = hashIndex !== -1 ? href.substring(hashIndex + 1) : href.substring(1);
+        return targetName === activeSection;
+      });
       if (activeLink) {
         activeLink.classList.add('active');
+        
+        // 현재 URL 해시와 활성 섹션이 다르면 URL 업데이트
+        const currentHash = window.location.hash.substring(1);
+        if (currentHash !== activeSection) {
+          // 페이지 새로고침 없이 URL 해시 업데이트
+          history.replaceState(null, null, `#${activeSection}`);
+        }
+      }
+    } else {
+      // 활성 섹션이 없으면 URL에서 해시 제거
+      if (window.location.hash) {
+        history.replaceState(null, null, window.location.pathname);
       }
     }
   }
