@@ -30,6 +30,10 @@
     개발자도구(F12)에서 확인할 수 있음.
   */
   const submenu = document.getElementById('w202509011599600243159');
+  if (!submenu) {
+    console.error('서브메뉴를 찾을 수 없습니다.');
+  }
+  submenu.classList.add('singleroom-submenu');
 
   const submenuLinks = submenu.querySelectorAll('a');
 

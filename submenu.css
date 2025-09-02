@@ -1,5 +1,5 @@
 
-#w202509011599600243159 {
+.singleroom-submenu {
     background-color: #ffffff;
     border: 1px solid #d1d1d1;
     border-radius: 8px;
@@ -11,30 +11,30 @@
 }
 
 /* 아임웹 위젯 스타일 리셋 */
-#w202509011599600243159 .widget,
-#w202509011599600243159 .nav,
-#w202509011599600243159 .sub-menu {
+.singleroom-submenu .widget,
+.singleroom-submenu .nav,
+.singleroom-submenu .sub-menu {
     all: unset;
     display: block;
 }
 
-#w202509011599600243159 div.widget ul {
+.singleroom-submenu div.widget ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-#w202509011599600243159 div.widget ul li {
+.singleroom-submenu div.widget ul li {
   margin-bottom: 8px;
 }
 
-#w202509011599600243159 div.widget ul li:last-child {
+.singleroom-submenu div.widget ul li:last-child {
   margin-bottom: 0px;
 }
 
-#w202509011599600243159 div.widget ul li a {
+.singleroom-submenu div.widget ul li a {
     display: block;
-    padding: 10px 12px;
+    padding: 10px 12px !important;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
@@ -44,31 +44,31 @@
     transition: all 0.3s ease;
 }
 
-#w202509011599600243159 div.widget ul li a .plain_name {
+.singleroom-submenu div.widget ul li a .plain_name {
     display: block;
     color: inherit;
     font-size: inherit;
     font-weight: inherit;
 }
 
-#w202509011599600243159 div.widget ul li a.active,
-#w202509011599600243159 div.widget ul li a:hover {
+.singleroom-submenu div.widget ul li a.active,
+.singleroom-submenu div.widget ul li a:hover {
     background-color: #008f73;
     color: #ffffff;
 }
 
-#w202509011599600243159 div.widget ul li a.active .plain_name,
-#w202509011599600243159 div.widget ul li a:hover .plain_name {
+.singleroom-submenu div.widget ul li a.active .plain_name,
+.singleroom-submenu div.widget ul li a:hover .plain_name {
     color: #ffffff;
 }
 
-#w202509011599600243159 div.widget ul li a:active {
+.singleroom-submenu div.widget ul li a:active {
     transform: scale(0.98);
     background-color: #007a61;
 }
 
 @media screen and (max-width: 768px) {
-    #w202509011599600243159 {
+    .singleroom-submenu {
         display: none !important;
     }
 }
