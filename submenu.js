@@ -66,15 +66,6 @@
       const targetName = hashIndex !== -1 ? href.substring(hashIndex + 1) : href.substring(1);
       const targetId = sectionIds[targetName];
       
-      console.log('클릭된 링크:', href, targetName, targetId);
-      console.log('현재 URL:', window.location.href);
-
-      // URL 업데이트 비활성화
-      // const newHash = `#${targetName}`;
-      // console.log('새로운 해시:', newHash);
-      // history.pushState(null, null, newHash);
-      // console.log('업데이트된 URL:', window.location.href);
-      
       // 해당 엘리먼트로 스크롤만 수행
       smoothScrollToElement(targetId);
     });
