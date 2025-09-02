@@ -4,7 +4,7 @@
  */
 {
   /*
-    섹션 이름과 해당 ID 매핑 설정
+    섹션(구역) 이름과 해당 ID 매핑 설정
     
     [section_name]: [id]
     section_name은 앵커 href의 # 다음 부분과 일치해야 함(아래 예시의 #test).
@@ -15,10 +15,12 @@
     id는 텍스트 위젯을 코드보기로 열어서 html 태그에 id로 직접 지정해야함.
     section_name과 id는 반드시 다르게 설정해야 함.
     id와 앵커가 동일할 경우 아임웹의 앵커 기능 때문에 원하는 대로 작동하지 않음.
+    데이터 쌍 마지막에는 섹션의 끝을 알려주는 "end": "singleroom-area-end"를 넣는 것을 권장함.
   */
   const sectionIds = {
     "a": "singleroom-area-a",
-    "b": "singleroom-area-b"
+    "b": "singleroom-area-b",
+    "end": "singleroom-area-end"
   };
 
   /*
@@ -64,12 +66,16 @@
       const targetName = hashIndex !== -1 ? href.substring(hashIndex + 1) : href.substring(1);
       const targetId = sectionIds[targetName];
       
-      console.log(href, targetName, targetId);
+      console.log('클릭된 링크:', href, targetName, targetId);
+      console.log('현재 URL:', window.location.href);
 
-      // URL 업데이트 (페이지 새로고침 없이)
-      history.pushState(null, null, href);
+      // URL 업데이트 비활성화
+      // const newHash = `#${targetName}`;
+      // console.log('새로운 해시:', newHash);
+      // history.pushState(null, null, newHash);
+      // console.log('업데이트된 URL:', window.location.href);
       
-      // 해당 엘리먼트로 스크롤
+      // 해당 엘리먼트로 스크롤만 수행
       smoothScrollToElement(targetId);
     });
   });
@@ -195,7 +201,6 @@
   // 페이지 로드 시 초기화
   window.addEventListener('load', () => {
     // 초기 활성 메뉴 설정
-    updateActiveMenu();
     
     // URL에 해시가 있으면 해당 섹션으로 스크롤
     const hash = window.location.hash;
@@ -208,6 +213,9 @@
         }
       }, 100);
     }
+    setTimeout(() => {
+      updateActiveMenu();
+    }, 500);
   });
 
 }
